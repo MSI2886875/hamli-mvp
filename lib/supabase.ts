@@ -8,5 +8,5 @@ export function supabaseBrowser() {
 }
 
 export function syntheticEmail(phone: string) {
-  return `${phone.replace(/\D/g, "")}@hamli.local`;
+ return `${phone.replace(/\D/g, "")}@users.hamli.app`;
 }
