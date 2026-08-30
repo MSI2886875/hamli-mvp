@@ -23,5 +23,16 @@ export async function POST(request: Request) {
     const { error: profileError } = await admin.from("profiles").insert({ id: data.user.id, role, first_name: body.firstName, last_name: body.lastName, phone, family_phone: role === "senior" ? familyPhone : null, connection_code: code });
     if (profileError) { await admin.auth.admin.deleteUser(data.user.id); throw profileError; }
     return NextResponse.json({ ok: true, connectionCode: code });
-  } catch { return NextResponse.json({ message: "ثبت‌نام انجام نشد." }, { status: 500 }); }
+} catch (error) {
+  console.error("Registration failure:", error);
+  return NextResponse.json(
+    {
+      message:
+        error instanceof Error
+          ? error.message
+          : "ثبت‌نام انجام نشد."
+    },
+    { status: 500 }
+  );
+}
 }
