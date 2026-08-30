@@ -21,7 +21,10 @@ export async function POST(request: Request) {
 }
     const code = role === "senior" ? String(crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000).padStart(6, "0") : null;
     const { error: profileError } = await admin.from("profiles").insert({ id: data.user.id, role, first_name: body.firstName, last_name: body.lastName, phone, family_phone: role === "senior" ? familyPhone : null, connection_code: code });
-    if (profileError) { await admin.auth.admin.deleteUser(data.user.id); throw profileError; }
+    if (profileError) {
+  await admin.auth.admin.deleteUser(data.user.id);
+  throw new Error(profileError.message);
+}
     return NextResponse.json({ ok: true, connectionCode: code });
 } catch (error) {
   console.error("Registration failure:", error);
